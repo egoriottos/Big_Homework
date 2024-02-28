@@ -1,0 +1,10 @@
+services:
+  postgres:
+    container_name: ""
+    image: ''
+    environment:
+      - 'POSTGRES_DB=document_db'
+      - 'POSTGRES_PASSWORD=secret'
+      - 'POSTGRES_USER=document_user'
+    ports:
+      - '5432:5432'
