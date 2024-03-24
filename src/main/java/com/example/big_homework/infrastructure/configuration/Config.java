@@ -8,13 +8,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class Config {
-    @Value("${spring.datasource.url}")
-    private String dbUrl;
 
-    @PostConstruct
-    public void init() {
-        System.out.println(dbUrl);
-    }
 
     @Bean
     public ModelMapper modelMapper() {

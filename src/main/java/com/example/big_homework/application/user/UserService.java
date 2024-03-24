@@ -35,7 +35,7 @@ public class UserService {
         if (!user.getName().equals(userFromCommand.getName())) user.setName(userFromCommand.getName());
 
         User saved = repository.save(user);
-        commands.setUpdatedAt(LocalDateTime.now());
+        commands.getBaseClass().setUpdatedAt(LocalDateTime.now());
 
         return saved;
     }

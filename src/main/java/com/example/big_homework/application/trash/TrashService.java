@@ -1,8 +1,6 @@
 package com.example.big_homework.application.trash;
 
-import com.example.big_homework.application.product.ProductService;
 import com.example.big_homework.application.user.UserService;
-import com.example.big_homework.domain.entity.Product;
 import com.example.big_homework.domain.entity.Trash;
 import com.example.big_homework.domain.entity.User;
 import com.example.big_homework.infrastructure.repository.ProductRepository;
@@ -24,11 +22,8 @@ import java.util.Set;
 public class TrashService {
     private final UserService userService;
     private final TrashRepository repository;
-    private final ProductService productService;
     private final ModelMapper modelMapper;
     private final ProductRepository productRepository;
-
-    private final Set<Product> products = new HashSet<>();
 
     public List<Trash> getAll() {
         return repository.findAll();
@@ -39,7 +34,7 @@ public class TrashService {
     }
 
     public Trash create(CreateTrashCommands createTrashCommand) {
-        User byId = userService.getById(createTrashCommand.getUserId());
+        User byId = userService.getById(createTrashCommand.getTrashId());
         if (byId == null) {
             return null;
         }
@@ -53,34 +48,23 @@ public class TrashService {
     public Trash update(Integer id, UpdateTrashCommands updateTrashCommand) {
 
         Trash foundTrash = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("проблема с поиском корзины в методе обновления"));
-        User byId = userService.getById(updateTrashCommand.getUserId());
+        User byId = userService.getById(updateTrashCommand.getTrashId());
 
-        if (updateTrashCommand.getUserId() != null && !updateTrashCommand.getUserId().equals(foundTrash.getUser())) {
-            foundTrash.setId(updateTrashCommand.getUserId());
+        if (updateTrashCommand.getTrashId() != null && !updateTrashCommand.getTrashId().equals(foundTrash.getUser())) {
+            foundTrash.setId(updateTrashCommand.getTrashId());
         }
-        if (updateTrashCommand.getCreatedAt() != null && !updateTrashCommand.getCreatedAt().equals(foundTrash.getCreatedAt())) {
-            foundTrash.setCreatedAt(updateTrashCommand.getCreatedAt());
+        if (updateTrashCommand.getBaseClass().getCreatedAt() != null && !updateTrashCommand.getBaseClass().getCreatedAt().equals(foundTrash.getBaseClass().getCreatedAt())) {
+            foundTrash.getBaseClass().setCreatedAt(updateTrashCommand.getBaseClass().getCreatedAt());
         }
 
         Trash savedTrash = repository.save(foundTrash);
-        updateTrashCommand.setUpdatedAt(LocalDateTime.now());
+        updateTrashCommand.getBaseClass().setUpdatedAt(LocalDateTime.now());
         return savedTrash;
     }
 
     public void delete(Integer id,CreateTrashCommands createTrashCommands) {
-        createTrashCommands.setDeletedAt(LocalDateTime.now());
+        createTrashCommands.getBaseClass().setDeletedAt(LocalDateTime.now());
         repository.deleteById(id);
 
     }
-
-    public List<Product> getByOwnerId(Integer ownerId) {
-        User user = userService.getById(ownerId);
-
-        return productRepository.findByUser(user);
-    }
-
-    public List<Product> getByOwnerName(String ownerName) {
-        return productRepository.findByUser_NameAllIgnoreCase(ownerName);
-    }
-
 }

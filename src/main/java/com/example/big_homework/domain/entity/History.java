@@ -17,9 +17,21 @@ import java.util.Objects;
 @AllArgsConstructor
 @Entity
 @Table(name = "history")
-public class History extends BaseClass {
+public class History  {
+    @Embedded
+    private BaseClass baseClass;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "history_id")
+    public Integer id;
 
     @OneToOne
+    @JoinColumn(name = "user_id")
+    private User owner;
+
+//    @OneToOne
+//    @JoinColumn(name ="trash", referencedColumnName = "history_id")
+    @OneToOne(mappedBy = "history")
     private Trash trash;
 
     @Override
@@ -27,11 +39,11 @@ public class History extends BaseClass {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         History history = (History) o;
-        return Objects.equals(id, history.id);
+        return Objects.equals(baseClass, history.baseClass) && Objects.equals(id, history.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(baseClass, id);
     }
 }

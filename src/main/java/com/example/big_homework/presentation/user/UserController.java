@@ -55,7 +55,7 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Integer id,@RequestBody UpdateUserCommands commands) {
-        commands.setDeletedAt(LocalDateTime.now());
+        commands.getBaseClass().setDeletedAt(LocalDateTime.now());
         service.delete(id);
     }
 

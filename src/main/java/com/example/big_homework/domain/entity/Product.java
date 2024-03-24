@@ -15,25 +15,35 @@ import java.util.Objects;
 @AllArgsConstructor
 @Entity
 @Table(name = "products")
-public class Product extends BaseClass {
+public class Product {
+    @Embedded
+    private BaseClass baseClass;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public Integer id;
 
+    @Column(name = "products")
     private String title;
+
+    @Column(name = "price")
     private Integer price;
 
     // как правильно обрабатывать владельца в комманде/квери, подсказка: Jackson поможет
     @ManyToOne
     private User owner;
+    @ManyToOne()
+    private Category category;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-        return Objects.equals(title, product.title) && Objects.equals(price, product.price) && Objects.equals(owner, product.owner);
+        return Objects.equals(baseClass, product.baseClass) && Objects.equals(id, product.id) && Objects.equals(title, product.title) && Objects.equals(price, product.price) && Objects.equals(owner, product.owner);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(title, price, owner);
+        return Objects.hash(baseClass, id, title, price, owner);
     }
 }

@@ -1,14 +1,10 @@
 package com.example.big_homework.application.category;
 
-import com.example.big_homework.application.product.ProductService;
 import com.example.big_homework.domain.entity.Category;
-import com.example.big_homework.domain.entity.Product;
 import com.example.big_homework.infrastructure.repository.CategoryRepository;
-import com.example.big_homework.presentation.category.dto.commands.CreateCategoryCommands;
 import com.example.big_homework.presentation.category.dto.commands.UpdateCategoryCommands;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -34,7 +30,7 @@ public class CategoryService {
         if (!category.getTitle().equals(category.getTitle())) category.setTitle(categoryFromCommand.getTitle());
 
         Category saved = categoryRepository.save(category);
-        commands.setUpdatedAt(LocalDateTime.now());
+        commands.getBaseClass().setUpdatedAt(LocalDateTime.now());
 
         return saved;
     }
@@ -46,7 +42,7 @@ public class CategoryService {
     }
 
     public void delete(Integer id, UpdateCategoryCommands updateCategoryCommands) {
-        updateCategoryCommands.setDeletedAt(LocalDateTime.now());
+        updateCategoryCommands.getBaseClass().setDeletedAt(LocalDateTime.now());
         categoryRepository.deleteById(id);
     }
 }

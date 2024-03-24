@@ -1,22 +1,20 @@
 package com.example.big_homework.application.product;
 
+import com.example.big_homework.application.category.CategoryService;
 import com.example.big_homework.application.user.UserService;
 import com.example.big_homework.domain.entity.Category;
 import com.example.big_homework.domain.entity.Product;
 import com.example.big_homework.domain.entity.User;
-import com.example.big_homework.domain.valueObj.BaseClass;
 import com.example.big_homework.infrastructure.repository.ProductRepository;
 import com.example.big_homework.presentation.product.dto.commands.CreateProductCommands;
 import com.example.big_homework.presentation.product.dto.commands.UpdateProductCommands;
-import com.example.big_homework.presentation.product.dto.queries.ProductQuery;
-import com.example.big_homework.presentation.user.dto.commands.CreateUserCommands;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -26,9 +24,9 @@ import java.util.Set;
 public class ProductService {
     private final UserService userService;
     private final ModelMapper modelMapper;
+    private final CategoryService categoryService;
     private final ProductRepository productRepository;
 
-    private final Set<Product> cars = new HashSet<>();
 
     public List<Product> getAll() {
         return productRepository.findAll();
@@ -40,21 +38,23 @@ public class ProductService {
 
     public List<Product> getByUserId(Integer userId) {
         User user = userService.getById(userId);
-        return productRepository.findByUser(user);
+        return productRepository.findByOwner(user);
     }
 
     public List<Product> getByUserName(String name) {
-        return productRepository.findByUser_NameAllIgnoreCase(name);
+        return productRepository.findByOwner_NameAllIgnoreCase(name);
     }
 
-    public List<Product> getByCategory(Category category){
+    public List<Product> getByCategory(Category category) {
+
+        //todo: реши проблему
         return productRepository.findByCategory(category);
     }
 
     public Product create(CreateProductCommands createProductCommands) {
-        User userId = userService.getById(createProductCommands.getUserId());
-        if(userId == null){
-           return null;
+        User userId = userService.getById(createProductCommands.getProductId());
+        if (userId == null) {
+            return null;
         }
         Product product = modelMapper.map(createProductCommands, Product.class);
         product.setOwner(userId);
@@ -66,20 +66,20 @@ public class ProductService {
         var product = getById(id);
 
         if (!product.getTitle().equals(productFromCommand.getTitle())
-                && !productFromCommand.getCreatedAt().equals(product.getCreatedAt())) {
+                && !productFromCommand.getBaseClass().getCreatedAt().equals(product.getBaseClass().getCreatedAt())) {
             product.setTitle(productFromCommand.getTitle());
-            product.setCreatedAt(productFromCommand.getCreatedAt());
+            product.getBaseClass().setCreatedAt(productFromCommand.getBaseClass().getCreatedAt());
         }
 
         Product saved = productRepository.save(product);
-        product.setUpdatedAt(LocalDateTime.now());
+        product.getBaseClass().setUpdatedAt(LocalDateTime.now());
 
         return saved;
     }
 
-    public void delete(Integer id,UpdateProductCommands commands) {
-        commands.setDeletedAt(LocalDateTime.now());
-         productRepository.deleteById(id);
+    public void delete(Integer id, UpdateProductCommands commands) {
+        commands.getBaseClass().setDeletedAt(LocalDateTime.now());
+        productRepository.deleteById(id);
 
     }
 }

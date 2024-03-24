@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class ProductQuery {
     private Integer id;
+    private Integer price;
     private String title;
-    private UserQuery owner;
     private CategoryQuery categoryQuery;
 }

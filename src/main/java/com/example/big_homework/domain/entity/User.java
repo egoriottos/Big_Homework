@@ -15,24 +15,25 @@ import java.util.Objects;
 @AllArgsConstructor
 @Entity
 @Table(name = "users")
-public class User extends BaseClass {
+public class User  {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="user_id")
+    public Integer id;
 
+    @Embedded
+    private BaseClass baseClass;
+
+    @Column(name="имя")
     private String name;
+
     @OneToOne
+    @JoinColumn(name ="trash_id", referencedColumnName = "user_id")
     private Trash trash;
+
     @OneToOne
+    @JoinColumn(name ="history_id", referencedColumnName = "user_id")
     private History history;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(name, user.name);
-    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name);
-    }
 }

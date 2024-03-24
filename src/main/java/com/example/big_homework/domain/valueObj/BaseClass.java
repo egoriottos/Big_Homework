@@ -1,32 +1,31 @@
 package com.example.big_homework.domain.valueObj;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
-@NoArgsConstructor
-@MappedSuperclass
+
+@Embeddable
 @Data
+@Setter
+@Getter
+@ToString
 public class BaseClass {
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        BaseClass baseClass = (BaseClass) o;
-        return Objects.equals(id, baseClass.id) && Objects.equals(createdAt, baseClass.createdAt) && Objects.equals(updatedAt, baseClass.updatedAt) && Objects.equals(deletedAt, baseClass.deletedAt);
-    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, createdAt, updatedAt, deletedAt);
-    }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Integer id;
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name ="created at",nullable = true)
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name ="updated at",nullable = true)
     private LocalDateTime updatedAt;
+
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name ="dealeted at",nullable = true)
     private LocalDateTime deletedAt;
 }

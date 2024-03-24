@@ -1,5 +1,6 @@
 package com.example.big_homework.presentation.category.dto.commands;
 
+import com.example.big_homework.domain.valueObj.BaseClass;
 import lombok.Builder;
 import lombok.Data;
 
@@ -9,8 +10,6 @@ import java.time.LocalDateTime;
 @Builder
 public class UpdateCategoryCommands {
     private String title;
-    private Integer userId;
-    public LocalDateTime createdAt;
-    public LocalDateTime updatedAt;
-    public LocalDateTime deletedAt;
+    private Integer category_id;
+    private BaseClass baseClass;
 }

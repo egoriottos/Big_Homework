@@ -1,5 +1,6 @@
 package com.example.big_homework.presentation.product.dto.commands;
 
+import com.example.big_homework.domain.valueObj.BaseClass;
 import lombok.Builder;
 import lombok.Data;
 
@@ -11,8 +12,6 @@ import java.util.Date;
 public class CreateProductCommands {
     private String title;
     private Integer price;
-    private Integer userId;
-    public LocalDateTime createdAt = LocalDateTime.now();
-    public LocalDateTime updatedAt;
-    public LocalDateTime deletedAt;
+    private Integer productId;
+    private BaseClass baseClass;
 }
